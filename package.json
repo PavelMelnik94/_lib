@@ -1,0 +1,63 @@
+{
+	"name": "utils",
+	"private": false,
+	"version": "1.0.0",
+	"description": "A utility library for DOM manipulation and event handling.",
+	"main": "./dist/dom-helper-lib.umd.js",
+	"types": "dist/index.d.ts",
+	"module": "./dist/dom-helper-lib.es.js",
+	"exports": {
+		".": {
+			"import": "./dist/dom-helper-lib.es.js",
+			"require": "./dist/dom-helper-lib.umd.js"
+		}
+	},
+	"scripts": {
+		"start": "vite",
+		"build": "tsc && vite build",
+		"preview": "vite preview",
+		"test": "vitest",
+		"test:coverage": "vitest run --coverage",
+		"test:ui": "vitest --ui",
+		"format": "eslint --fix \"src/**/*.{js,ts}\"",
+		"prepublishOnly": "npm run build",
+		"prepare": "npm run build"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/PavelMelnik94/_lib.git"
+	},
+	"keywords": [
+		"utils",
+		"dom",
+		"event",
+		"library"
+	],
+	"author": "Pavel Melnik <recyclesordie94@gmail.com>",
+	"license": "MIT",
+	"files": [
+		"dist"
+	],
+	"type": "module",
+	"devDependencies": {
+		"@gravity-ui/babel-preset": "1.0.1",
+		"@gravity-ui/browserslist-config": "4.3.0",
+		"@gravity-ui/eslint-config": "3.2.0",
+		"@gravity-ui/prettier-config": "1.1.0",
+		"@gravity-ui/stylelint-config": "4.0.1",
+		"@gravity-ui/tsconfig": "1.0.0",
+		"@testing-library/dom": "10.4.0",
+		"@types/node": "^22.10.2",
+		"@vitest/coverage-v8": "2.1.8",
+		"@vitest/ui": "2.1.8",
+		"eslint": "8.57.1",
+		"jsdom": "25.0.1",
+		"prettier": "3.4.2",
+		"typescript": "5.6.2",
+		"vite": "6.0.1",
+		"vitest": "2.1.8"
+	},
+	"browserslist": [
+		"extends @gravity-ui/browserslist-config"
+	]
+}
