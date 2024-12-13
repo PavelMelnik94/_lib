@@ -1,7 +1,7 @@
 {
 	"name": "dom-utils-minimize",
 	"private": false,
-	"version": "1.0.5",
+	"version": "1.0.6",
 	"description": "A utility library for DOM manipulation and event handling.",
 	"main": "./dist/dom-helper-lib.umd.js",
 	"types": "dist/index.d.ts",
