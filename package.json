@@ -1,5 +1,5 @@
 {
-	"name": "utils",
+	"name": "dom-utils-minimize",
 	"private": false,
 	"version": "1.0.4",
 	"description": "A utility library for DOM manipulation and event handling.",
