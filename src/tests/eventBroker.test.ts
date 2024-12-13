@@ -1,100 +1,101 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { EventBroker } from '../scripts/eventBroker';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
 
-describe('EventBroker', () => {
-	it('should create event broker instance', () => {
-		const broker = new EventBroker();
-		expect(broker).toHaveProperty('hub');
-		expect(broker).toHaveProperty('emit');
-		expect(broker).toHaveProperty('on');
-		expect(broker).toHaveProperty('off');
+import createEventBroker from '../scripts/eventBroker';
+
+describe('createEventBroker', () => {
+	const broker = createEventBroker();
+
+	beforeEach(() => {
+		// Очищаем все события перед каждым тестом
+		broker.hub = Object.create(null);
 	});
 
-	it('should handle event subscription and emission', () => {
-		const broker = new EventBroker();
-		const handler = vi.fn();
-
-		broker.on('test', handler);
-		broker.emit('test', { data: 'test' });
-
-		expect(handler).toHaveBeenCalledWith({ data: 'test' });
+	test('should create event broker with empty hub', () => {
+		expect(broker.hub).toEqual({});
 	});
 
-	it('should handle event unsubscription', () => {
-		const broker = new EventBroker();
+	test('should subscribe to event and emit data', () => {
+		const handler = vi.fn();
+		const testData = { message: 'test' };
+
+		broker.on('test-event', handler);
+		broker.emit('test-event', testData);
+
+		expect(handler).toHaveBeenCalledWith(testData);
+		expect(handler).toHaveBeenCalledTimes(1);
+	});
+
+	test('should handle multiple subscribers for same event', () => {
+		const handler1 = vi.fn();
+		const handler2 = vi.fn();
+		const testData = { message: 'test' };
+
+		broker.on('test-event', handler1);
+		broker.on('test-event', handler2);
+		broker.emit('test-event', testData);
+
+		expect(handler1).toHaveBeenCalledWith(testData);
+		expect(handler2).toHaveBeenCalledWith(testData);
+		expect(handler1).toHaveBeenCalledTimes(1);
+		expect(handler2).toHaveBeenCalledTimes(1);
+	});
+
+	test('should not call handlers for different events', () => {
+		const handler1 = vi.fn();
+		const handler2 = vi.fn();
+
+		broker.on('event1', handler1);
+		broker.on('event2', handler2);
+		broker.emit('event1', 'data');
+
+		expect(handler1).toHaveBeenCalledTimes(1);
+		expect(handler2).not.toHaveBeenCalled();
+	});
+
+	test('should successfully unsubscribe handler', () => {
 		const handler = vi.fn();
 
-		broker.on('test', handler);
-		broker.off('test', handler);
-		broker.emit('test', { data: 'test' });
+		broker.on('test-event', handler);
+		broker.off('test-event', handler);
+		broker.emit('test-event', 'data');
 
 		expect(handler).not.toHaveBeenCalled();
 	});
 
-	it('should handle multiple subscribers', () => {
-		const broker = new EventBroker();
-		const handler1 = vi.fn();
-		const handler2 = vi.fn();
+	test('should handle unsubscribe for non-existent event', () => {
+		const handler = vi.fn();
 
-		broker.on('test', handler1);
-		broker.on('test', handler2);
-		broker.emit('test', { data: 'test' });
-
-		expect(handler1).toHaveBeenCalledWith({ data: 'test' });
-		expect(handler2).toHaveBeenCalledWith({ data: 'test' });
+		// Не должно вызывать ошибок
+		expect(() => {
+			broker.off('non-existent', handler);
+		}).not.toThrow();
 	});
 
-	it('should handle unsubscribe for non-existent event', () => {
-		const broker = new EventBroker();
-		const callback = vi.fn();
-
-		// Попытка отписаться от несуществующего события
-		broker.unsubscribe('non-existent-event', callback);
-
-		// Проверяем, что это не вызывает ошибок
-		expect(() => broker.unsubscribe('non-existent-event', callback)).not.toThrow();
+	test('should handle emission of non-existent event', () => {
+		expect(() => {
+			broker.emit('non-existent', 'data');
+		}).not.toThrow();
 	});
 
-	it('should handle unsubscribe for non-existent callback', () => {
-		const broker = new EventBroker();
-		const callback1 = vi.fn();
-		const callback2 = vi.fn();
+	test('should remove event from hub when last handler is unsubscribed', () => {
+		const handler = vi.fn();
 
-		// Подписываемся на событие
-		broker.subscribe('test-event', callback1);
+		broker.on('test-event', handler);
+		broker.off('test-event', handler);
 
-		// Пытаемся отписать другой callback
-		broker.unsubscribe('test-event', callback2);
-
-		// Проверяем, что оригинальный callback всё ещё работает
-		broker.publish('test-event', 'test-data');
-		expect(callback1).toHaveBeenCalledWith('test-data');
+		expect(broker.hub['test-event']).toBeUndefined();
 	});
 
-	it('should handle multiple subscriptions and unsubscriptions', () => {
-		const broker = new EventBroker();
-		const callback1 = vi.fn();
-		const callback2 = vi.fn();
+	test('should handle multiple unsubscribe calls for same handler', () => {
+		const handler = vi.fn();
 
-		// Подписываем оба callback'а
-		broker.subscribe('test-event', callback1);
-		broker.subscribe('test-event', callback2);
+		broker.on('test-event', handler);
+		broker.off('test-event', handler);
+		broker.off('test-event', handler); // Повторный вызов
 
-		// Публикуем событие
-		broker.publish('test-event', 'test-data');
-
-		// Проверяем, что оба callback'а были вызваны
-		expect(callback1).toHaveBeenCalledWith('test-data');
-		expect(callback2).toHaveBeenCalledWith('test-data');
-
-		// Отписываем первый callback
-		broker.unsubscribe('test-event', callback1);
-
-		// Публикуем событие снова
-		broker.publish('test-event', 'new-data');
-
-		// Проверяем, что только второй callback был вызван
-		expect(callback1).toHaveBeenCalledTimes(1);
-		expect(callback2).toHaveBeenCalledTimes(2);
+		expect(broker.hub['test-event']).toBeUndefined();
+		expect(() => {
+			broker.off('test-event', handler);
+		}).not.toThrow();
 	});
 });
