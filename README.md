@@ -5,7 +5,7 @@ Utility library for DOM manipulation and event handling with TypeScript support.
 ## Installation
 
 ```bash
-npm install dom-utils-minimize@1.0.5
+npm install dom-utils-minimize
 ```
 
 ## Features
