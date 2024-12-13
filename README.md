@@ -5,7 +5,7 @@ Utility library for DOM manipulation and event handling with TypeScript support.
 ## Installation
 
 ```bash
-npm install @yourscope/utils
+npm install dom-utils-minimize@1.0.5
 ```
 
 ## Features
@@ -46,7 +46,7 @@ View detailed coverage report: [coverage/lcov-report/index.html](./coverage/lcov
 Lightweight jQuery-like DOM manipulation utility.
 
 ```typescript
-import { $ } from '@yourscope/utils';
+import { $ } from 'dom-utils-minimize';
 
 // Selection
 const element = $('.my-class');
@@ -83,7 +83,7 @@ $('.element').animate(
 ### createEventBroker
 
 ```typescript
-import { createEventBroker } from '@yourscope/utils';
+import { createEventBroker } from 'dom-utils-minimize';
 
 const broker = createEventBroker();
 
@@ -114,7 +114,7 @@ broker.once('init', () => {
 Create DOM elements from HTML strings.
 
 ```typescript
-import { createElFromStr } from '@yourscope/utils';
+import { createElFromStr } from 'dom-utils-minimize';
 
 // Create simple element
 const div = createElFromStr('<div class="container">Hello</div>');
@@ -140,17 +140,14 @@ const span = createElFromStr('<span>Text</span>', 'span');
 The library is written in TypeScript and provides full type definitions.
 
 ```typescript
-import { $, EventBroker } from '@yourscope/utils';
+import { $, createEventBroker } from 'dom-utils-minimize';
 
 interface UserData {
   id: number;
   name: string;
 }
 
-const broker = new EventBroker<{
-  userUpdate: UserData;
-  userDelete: { id: number };
-}>();
+const broker = createEventBroker();
 
 broker.on('userUpdate', (data) => {
   // data is typed as UserData
