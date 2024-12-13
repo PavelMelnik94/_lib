@@ -28,6 +28,7 @@ The library maintains high test coverage to ensure reliability:
 | Total           | 98.3%    | 6     | 490   | 98.2%     | 100%      | 97.2%    |
 
 ### Test Statistics
+
 - Total Tests: 42
 - Unit Tests: 36
 - Integration Tests: 6
@@ -79,9 +80,7 @@ $('.element').animate(
 );
 ```
 
-### EventBroker
-
-Powerful pub/sub system for event handling.
+### createEventBroker
 
 ```typescript
 import { createEventBroker } from '@yourscope/utils';
