@@ -65,7 +65,6 @@ $('.my-element')
 // Event handling
 $('.button')
   .on('click', (e) => console.log('Clicked!'))
-  .trigger('click');
 
 // Animations
 $('.element').animate(

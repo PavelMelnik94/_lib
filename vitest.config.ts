@@ -18,7 +18,6 @@ export default defineConfig({
 				'vitest.config.ts',
 			],
 		},
-		// setupFiles: ['./src/tests/setup.ts'],
 		include: ['src/**/*.{test,spec}.{js,ts}'],
 		watch: true,
 		reporters: ['verbose'],

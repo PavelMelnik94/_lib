@@ -1,11 +1,4 @@
-type EventHandler = (data: unknown) => void;
-
-type EventBroker = {
-	hub: Record<string, EventHandler[]>;
-	emit: (event: string, data: unknown) => void;
-	on: (event: string, handler: EventHandler) => void;
-	off: (event: string, handler: EventHandler) => void;
-};
+import type { EventBroker } from "./types";
 
 const createEventBroker = (): EventBroker => ({
 	hub: Object.create(null),
