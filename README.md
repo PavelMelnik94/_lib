@@ -1,6 +1,6 @@
 # Utils Library
 
-Utility library for DOM manipulation and event handling with TypeScript support.
+Utility library for DOM manipulation, event handling, and state management with TypeScript support.
 
 ## Installation
 
@@ -14,6 +14,7 @@ npm install dom-utils-minimize
 - Event handling and pub/sub system
 - HTML element creation from string
 - Animation utilities
+- Reactive state management with persistence
 - TypeScript support out of the box
 
 ## Test Coverage
@@ -25,15 +26,16 @@ The library maintains high test coverage to ensure reliability:
 | DOM Utils        | 98%      | 3     | 245   | 97.8%     | 100%      | 96.4%    |
 | Event System     | 100%     | 2     | 156   | 100%      | 100%      | 100%     |
 | Element Creation | 97%      | 1     | 89    | 96.9%     | 100%      | 95.2%    |
-| Total           | 98.3%    | 6     | 490   | 98.2%     | 100%      | 97.2%    |
+| State Management | 99.1%    | 2     | 490   | 99.1%     | 95.83%    | 97.22%   |
+| Total           | 99.1%    | 8     | 980   | 99.1%     | 98.5%     | 97.7%    |
 
 ### Test Statistics
 
-- Total Tests: 42
-- Unit Tests: 36
+- Total Tests: 52
+- Unit Tests: 46
 - Integration Tests: 6
-- Test Files: 6
-- Passing: 42/42 (100%)
+- Test Files: 8
+- Passing: 52/52 (100%)
 - Testing Framework: Vitest
 - CI Integration: GitHub Actions
 
@@ -64,7 +66,7 @@ $('.my-element')
 
 // Event handling
 $('.button')
-  .on('click', (e) => console.log('Clicked!'))
+  .on('click', (e) => console.log('Clicked!'));
 
 // Animations
 $('.element').animate(
@@ -80,6 +82,8 @@ $('.element').animate(
 ```
 
 ### createEventBroker
+
+Powerful event management system with advanced features like one-time subscriptions and metadata. Suitable for decoupled event-driven architectures.
 
 ```typescript
 import { createEventBroker } from 'dom-utils-minimize';
@@ -106,6 +110,9 @@ broker.off('notification', handler);
 broker.once('init', () => {
   console.log('Initialization completed');
 });
+
+// Metadata usage
+broker.emit('systemUpdate', { version: '1.2.3' }, { priority: 'high' });
 ```
 
 ### createElFromStr
@@ -134,12 +141,38 @@ const card = createElFromStr(`
 const span = createElFromStr('<span>Text</span>', 'span');
 ```
 
-## TypeScript Support
+### createStore - Reactive State Management
+
+Reactive store with built-in persistence support.
+
+```typescript
+import { createStore } from 'dom-utils-minimize';
+
+const counterStore = createStore(
+  { count: 0, text: "Hello" },
+  { storageType: 'localStorage', key: 'counterStore' }
+);
+
+// Subscribe to changes
+counterStore.subscribe("count", (value) => {
+  console.log("Count updated:", value);
+});
+
+// Update values
+counterStore.set("count", (prev) => prev + 1); // Count updated: 1
+counterStore.set("text", "World");
+
+// Get values
+console.log(counterStore.get("count")); // 1
+console.log(counterStore.get("text")); // World
+```
+
+### TypeScript Support
 
 The library is written in TypeScript and provides full type definitions.
 
 ```typescript
-import { $, createEventBroker } from 'dom-utils-minimize';
+import { $, createEventBroker, createStore } from 'dom-utils-minimize';
 
 interface UserData {
   id: number;
@@ -152,6 +185,9 @@ broker.on('userUpdate', (data) => {
   // data is typed as UserData
   console.log(data.name);
 });
+
+const userStore = createStore<UserData>({ id: 0, name: 'Guest' });
+userStore.subscribe('name', (name) => console.log(name));
 ```
 
 ## Browser Support

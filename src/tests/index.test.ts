@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { $, createElFromStr, createEventBroker } from '../index';
+import { $, createElFromStr, createEventBroker, createStore } from '../index';
 
 describe('Library exports', () => {
 	it('should export $ function', () => {
@@ -16,5 +16,10 @@ describe('Library exports', () => {
 	it('should export createEventBroker function', () => {
 		expect(createEventBroker).toBeDefined();
 		expect(typeof createEventBroker).toBe('function');
+	});
+
+	it('should export createStore function', () => {
+		expect(createStore).toBeDefined();
+		expect(typeof createStore).toBe('function');
 	});
 });

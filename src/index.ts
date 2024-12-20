@@ -1,1 +1,1 @@
-export { $, createElFromStr, createEventBroker } from './scripts';
+export { $, createElFromStr, createEventBroker, createStore } from './scripts';
